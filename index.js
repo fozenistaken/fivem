@@ -27,6 +27,8 @@ class Server {
 		});
 	}
 
+
+
 	getResources() {
 		return new Promise((send, err) => {
 			axios
@@ -40,6 +42,25 @@ class Server {
 				});
 		});
 	}
+
+getMax() {
+		return new Promise((send, err) => {
+			axios
+				.get(`http://${this.ip}/players.json`, { timeout: this.options.timeout })
+				.then(function(body) {
+					let players = body.data;
+                        axios
+                                .get(`http://${this.ip}/info.json`, { timeout: this.options.timeout })
+				.then(function(body) {
+					let maxClients = body.data.vars.sv_maxClients;
+					send(`(${maxClients}/${players.lenght})`);
+				})
+				.catch(function(error) {
+					err(error);
+				});
+		});
+	}
+
 
     getOnesync() {
 		return new Promise((send, err) => {
